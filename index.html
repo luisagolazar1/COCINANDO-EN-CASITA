@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recetario Criollo — Recetas argentinas</title>
+<meta name="description" content="Elegí los ingredientes que tenés y encontrá recetas argentinas para cocinar hoy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cartel-top" aria-hidden="true"></div>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="escudo" aria-hidden="true">
+      <svg viewBox="0 0 100 100" width="52" height="52">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="4"/>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M50 18 L56 40 L78 40 L60 53 L67 75 L50 61 L33 75 L40 53 L22 40 L44 40 Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="titulos">
+      <h1>Recetario Criollo</h1>
+      <p class="subtitulo">Elegí lo que tenés en la alacena y te tiramos la receta</p>
+    </div>
+  </div>
+  <div class="header-buscador">
+    <input type="search" id="buscador" placeholder="Buscar por nombre… (ej: locro, milanesa, alfajores)" autocomplete="off">
+    <button id="btn-sorpresa" title="Elegime una receta al azar">🎲 Sorprendeme</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <button id="btn-filtros-mobile" class="btn-filtros-mobile">🧅 Filtrar por ingredientes y categoría</button>
+
+  <aside class="panel-filtros" id="panel-filtros">
+    <div class="panel-filtros-head">
+      <h2>Filtros</h2>
+      <button id="btn-limpiar" class="link-limpiar">Limpiar todo</button>
+    </div>
+
+    <section class="filtro-grupo">
+      <h3>Categoría</h3>
+      <div id="chips-categoria" class="chips"></div>
+    </section>
+
+    <section class="filtro-grupo">
+      <h3>Ingredientes que tenés</h3>
+      <p class="ayuda">Tocá los que tengas a mano. Ordenamos las recetas que más coincidan.</p>
+      <div id="chips-ingredientes" class="chips chips-ingredientes"></div>
+    </section>
+
+    <section class="filtro-grupo">
+      <h3>Dificultad</h3>
+      <div id="chips-dificultad" class="chips"></div>
+    </section>
+
+    <section class="filtro-grupo">
+      <h3>Tiempo máximo</h3>
+      <div id="chips-tiempo" class="chips"></div>
+    </section>
+  </aside>
+
+  <main class="resultados">
+    <div class="resultados-head">
+      <span id="contador-resultados"></span>
+      <span id="chips-activos" class="chips-activos"></span>
+    </div>
+    <div id="grid-recetas" class="grid-recetas"></div>
+    <div id="sin-resultados" class="sin-resultados" hidden>
+      <p>No encontramos recetas con esa combinación.</p>
+      <p class="ayuda">Probá sacar algún filtro, o tocá "Sorprendeme".</p>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  <p>Recetario Criollo · <span id="contador-total"></span> recetas argentinas · Hecho para cocinar con lo que hay</p>
+</footer>
+
+<div id="modal-overlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <button id="btn-cerrar-modal" class="btn-cerrar" aria-label="Cerrar">✕</button>
+    <div id="modal-contenido"></div>
+  </div>
+</div>
+
+<script src="recetas.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
