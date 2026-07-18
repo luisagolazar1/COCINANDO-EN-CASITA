@@ -40,7 +40,6 @@
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  // ---------- construir listas de filtros ----------
   function construirFiltros(){
     const categorias = [...new Set(RECETAS.map(r => r.categoria))].sort();
     const contCat = $("#chips-categoria");
@@ -114,7 +113,6 @@
     else { set.add(valor); chipEl.classList.add("activo"); }
   }
 
-  // ---------- filtrado ----------
   function recetasFiltradas(){
     const texto = normalizar(estado.texto.trim());
     let lista = RECETAS.filter(r => {
@@ -138,7 +136,6 @@
     return lista;
   }
 
-  // ---------- render ----------
   function render(){
     const lista = recetasFiltradas();
     const grid = $("#grid-recetas");
@@ -177,20 +174,25 @@
     });
   }
 
+  let recetaAbiertaId = null;
+
   function crearTarjeta(r){
     const info = CATEGORIA_INFO[r.categoria] || { icono:"🍽️", color:"#B23A2E" };
-    const div = document.createElement("button");
-    div.type = "button";
-    div.className = "tarjeta";
+    const abierta = recetaAbiertaId === r.id;
+
+    const div = document.createElement("div");
+    div.className = "tarjeta" + (abierta ? " abierta" : "");
     div.style.setProperty("--cat-color", info.color);
-    div.setAttribute("aria-haspopup","dialog");
 
     let matchHTML = "";
     if(typeof r._match === "number" && estado.ingredientes.size){
       matchHTML = `<div class="tarjeta-match">✓ coincide con ${r._match} de ${estado.ingredientes.size} ingrediente${estado.ingredientes.size===1?"":"s"}</div>`;
     }
 
-    div.innerHTML = `
+    const cabecera = document.createElement("button");
+    cabecera.type = "button";
+    cabecera.className = "tarjeta-cabecera";
+    cabecera.innerHTML = `
       <div class="tarjeta-top">
         <div class="tarjeta-icono">${info.icono}</div>
         <div>
@@ -205,40 +207,41 @@
         <span>📋 ${r.dificultad}</span>
       </div>
     `;
-    div.addEventListener("click", () => abrirModal(r));
+    cabecera.addEventListener("click", () => {
+      recetaAbiertaId = abierta ? null : r.id;
+      render();
+      if(!abierta){
+        requestAnimationFrame(() => {
+          div.scrollIntoView({ behavior:"smooth", block:"start" });
+        });
+      }
+    });
+    div.appendChild(cabecera);
+
+    if(abierta){
+      const detalle = document.createElement("div");
+      detalle.className = "detalle";
+      detalle.innerHTML = `
+        <h4>Ingredientes</h4>
+        <ul>${r.ingredientes.map(i => `<li>${i}</li>`).join("")}</ul>
+        <h4>Preparación</h4>
+        <ol>${r.pasos.map(p => `<li>${p}</li>`).join("")}</ol>
+      `;
+      const btnCerrar = document.createElement("button");
+      btnCerrar.type = "button";
+      btnCerrar.className = "btn-cerrar-detalle";
+      btnCerrar.textContent = "Cerrar";
+      btnCerrar.addEventListener("click", () => {
+        recetaAbiertaId = null;
+        render();
+      });
+      detalle.appendChild(btnCerrar);
+      div.appendChild(detalle);
+    }
+
     return div;
   }
 
-  // ---------- modal ----------
-  function abrirModal(r){
-    const info = CATEGORIA_INFO[r.categoria] || { icono:"🍽️", color:"#B23A2E" };
-    const overlay = $("#modal-overlay");
-    const cont = $("#modal-contenido");
-    cont.style.setProperty("--cat-color", info.color);
-    cont.innerHTML = `
-      <span class="modal-cat" style="background:${info.color}">${info.icono} ${r.categoria}</span>
-      <h2 id="modal-titulo">${r.nombre}</h2>
-      <div class="modal-meta">
-        <span>⏱ ${r.tiempo} minutos</span>
-        <span>👥 ${r.porciones} porciones</span>
-        <span>📋 Dificultad: ${r.dificultad}</span>
-      </div>
-      <h4>Ingredientes</h4>
-      <ul>${r.ingredientes.map(i => `<li>${i}</li>`).join("")}</ul>
-      <h4>Preparación</h4>
-      <ol>${r.pasos.map(p => `<li>${p}</li>`).join("")}</ol>
-    `;
-    overlay.hidden = false;
-    document.body.style.overflow = "hidden";
-    $("#btn-cerrar-modal").focus();
-  }
-
-  function cerrarModal(){
-    $("#modal-overlay").hidden = true;
-    document.body.style.overflow = "";
-  }
-
-  // ---------- eventos generales ----------
   function init(){
     construirFiltros();
     $("#contador-total").textContent = RECETAS.length;
@@ -248,19 +251,16 @@
       render();
     });
 
-    $("#btn-cerrar-modal").addEventListener("click", cerrarModal);
-    $("#modal-overlay").addEventListener("click", e => {
-      if(e.target.id === "modal-overlay") cerrarModal();
-    });
-    document.addEventListener("keydown", e => {
-      if(e.key === "Escape") cerrarModal();
-    });
-
     $("#btn-sorpresa").addEventListener("click", () => {
       const lista = recetasFiltradas();
       const base = lista.length ? lista : RECETAS;
       const elegida = base[Math.floor(Math.random()*base.length)];
-      abrirModal(elegida);
+      recetaAbiertaId = elegida.id;
+      render();
+      requestAnimationFrame(() => {
+        const el = document.querySelector(".tarjeta.abierta");
+        if(el) el.scrollIntoView({ behavior:"smooth", block:"start" });
+      });
     });
 
     $("#btn-limpiar").addEventListener("click", () => {
@@ -269,6 +269,7 @@
       estado.ingredientes.clear();
       estado.dificultades.clear();
       estado.tiempoMax = Infinity;
+      recetaAbiertaId = null;
       $("#buscador").value = "";
       $$(".chip").forEach(c => c.classList.remove("activo"));
       render();
