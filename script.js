@@ -11,7 +11,9 @@
     "Postres y dulces":    { icono:"🍮", color:"#8E4A8C" },
     "Panificados":         { icono:"🍞", color:"#4C6E3F" },
     "Salsas y aderezos":   { icono:"🥄", color:"#1F5C8A" },
-    "Bebidas":             { icono:"🧉", color:"#3E8E7E" }
+    "Bebidas":             { icono:"🧉", color:"#3E8E7E" },
+    "Comida saludable":       { icono:"🥗", color:"#3E8E5E" },
+    "Comida saludable viral": { icono:"🌱", color:"#2E9E6E" }
   };
 
   const TIEMPOS = [
