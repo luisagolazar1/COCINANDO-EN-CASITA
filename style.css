@@ -27,7 +27,6 @@ body{
 
 h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0.01em; margin:0; }
 
-/* ---------- CARTEL SUPERIOR (firma visual: banda tipo fileteado) ---------- */
 .cartel-top{
   height:10px;
   background:
@@ -96,7 +95,6 @@ h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0
 #btn-sorpresa:hover{ background:#8f2c22; transform: translateY(-1px); }
 #btn-sorpresa:focus-visible{ outline:3px solid var(--dorado); outline-offset:2px; }
 
-/* ---------- LAYOUT ---------- */
 .layout{
   max-width:1080px;
   margin: 20px auto;
@@ -173,7 +171,6 @@ h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0
 
 .chips-ingredientes{ max-height:260px; overflow-y:auto; padding-right:4px; }
 
-/* ---------- RESULTADOS ---------- */
 .resultados-head{
   display:flex; justify-content:space-between; align-items:center;
   flex-wrap:wrap; gap:8px;
@@ -212,10 +209,17 @@ h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0
   position:absolute; top:0; left:0; right:0; height:5px;
   background: var(--cat-color, var(--rojo));
 }
-.tarjeta:hover, .tarjeta:focus-visible{
+.tarjeta:hover{
   transform: translateY(-3px);
   box-shadow: 0 10px 22px rgba(43,33,24,0.24);
-  outline:none;
+}
+.tarjeta-cabecera:focus-visible{
+  outline:3px solid var(--azul); outline-offset:3px; border-radius:6px;
+}
+.tarjeta-cabecera{
+  all: unset;
+  display:flex; flex-direction:column; gap:8px;
+  width:100%; cursor:pointer; text-align:left; box-sizing:border-box;
 }
 .tarjeta-top{ display:flex; align-items:center; gap:10px; }
 .tarjeta-icono{
@@ -254,54 +258,40 @@ h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0
   font-size:0.82rem; border-top: 2px dashed var(--borde);
 }
 
-/* ---------- MODAL ---------- */
-.modal-overlay{
-  position:fixed; inset:0; background:rgba(20,15,10,0.6);
-  display:flex; align-items:flex-start; justify-content:center;
-  padding: 24px 14px; overflow-y:auto; z-index:50;
+.tarjeta{ grid-column: span 1; }
+.tarjeta.abierta{
+  grid-column: 1 / -1;
+  cursor: default;
 }
-.modal{
-  background: var(--papel-alto);
-  border:3px solid var(--tinta);
-  border-radius: 14px;
-  max-width: 640px; width:100%;
-  padding: 26px 22px 28px;
-  position:relative;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-}
-.btn-cerrar{
-  position:absolute; top:12px; right:12px;
-  width:34px; height:34px; border-radius:50%;
-  border:2px solid var(--tinta); background:var(--papel);
-  font-size:1rem; cursor:pointer; font-family:inherit;
-}
-.btn-cerrar:hover{ background: var(--rojo); color:#fff; border-color:var(--rojo); }
+.tarjeta.abierta:hover{ transform:none; }
 
-.modal-cat{
+.detalle-cat{
   display:inline-block; font-size:0.72rem; text-transform:uppercase;
   letter-spacing:0.06em; font-weight:800; color:#fff;
   background: var(--cat-color, var(--rojo));
-  padding:3px 10px; border-radius:999px; margin-bottom:8px;
+  padding:3px 10px; border-radius:999px; margin-bottom:6px;
 }
-.modal h2{
-  font-family:"Work Sans",sans-serif; font-weight:800;
-  font-size:1.5rem; margin-bottom:6px; padding-right:30px;
-}
-.modal-meta{
+.detalle-meta{
   display:flex; gap:16px; flex-wrap:wrap;
   font-size:0.85rem; color: var(--tinta-suave);
-  border-bottom:2px dashed var(--borde); padding-bottom:14px; margin-bottom:16px;
+  border-bottom:2px dashed var(--borde); padding-bottom:14px; margin-bottom:14px;
 }
-.modal h4{
+.detalle h4{
   font-family:"Work Sans",sans-serif; font-size:0.78rem; text-transform:uppercase;
-  letter-spacing:0.07em; color: var(--azul); margin: 18px 0 8px; font-weight:800;
+  letter-spacing:0.07em; color: var(--azul); margin: 16px 0 8px; font-weight:800;
 }
-.modal ul{ margin:0; padding-left:20px; }
-.modal ul li{ margin-bottom:5px; }
-.modal ol{ margin:0; padding-left:20px; }
-.modal ol li{ margin-bottom:10px; line-height:1.45; }
+.detalle ul{ margin:0; padding-left:20px; }
+.detalle ul li{ margin-bottom:5px; }
+.detalle ol{ margin:0; padding-left:20px; }
+.detalle ol li{ margin-bottom:10px; line-height:1.45; }
+.btn-cerrar-detalle{
+  margin-top:16px;
+  border:2px solid var(--tinta); background: var(--papel);
+  border-radius:999px; padding:8px 16px; font-family:inherit;
+  font-weight:700; cursor:pointer;
+}
+.btn-cerrar-detalle:hover{ background: var(--rojo); color:#fff; border-color:var(--rojo); }
 
-/* ---------- RESPONSIVE ---------- */
 @media (max-width: 800px){
   .layout{ grid-template-columns: 1fr; }
   .btn-filtros-mobile{ display:block; }
