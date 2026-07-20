@@ -309,12 +309,19 @@ h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0
 .tarjeta-top{ display:flex; align-items:center; gap:10px; }
 .tarjeta-icono{
   font-size:1.6rem;
-  width:44px; height:44px;
+  width:52px; height:52px;
   display:flex; align-items:center; justify-content:center;
   background: var(--papel);
-  border-radius:50%;
+  border-radius:14px;
   border:1.5px solid var(--borde);
   flex-shrink:0;
+  overflow:hidden;
+}
+.tarjeta-icono img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
 }
 .tarjeta h3{
   font-family:"Work Sans",sans-serif; font-weight:800;
