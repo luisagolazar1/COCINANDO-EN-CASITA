@@ -118,6 +118,68 @@ h1,h2,h3{ font-family:"Alfa Slab One", "Work Sans", sans-serif; letter-spacing:0
 #btn-sorpresa:hover{ background:#8f2c22; transform: translateY(-1px); }
 #btn-sorpresa:focus-visible{ outline:3px solid var(--dorado); outline-offset:2px; }
 
+#btn-papelera{
+  background: transparent;
+  color: var(--crema, #f3e6c8);
+  border: 2px solid var(--dorado);
+  border-radius: var(--radio);
+  padding:11px 16px;
+  font-weight:700;
+  font-size:0.95rem;
+  cursor:pointer;
+  transition: background .15s ease, transform .12s ease;
+  white-space:nowrap;
+}
+#btn-papelera:hover{ background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+#btn-papelera.activo{ background: var(--dorado); color:#2a1a10; }
+
+.tarjeta-calificacion{
+  display:inline-block;
+  margin-top:6px;
+  font-size:0.85rem;
+  font-weight:700;
+  color:#8f2c22;
+}
+
+.calificacion-botones{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin: 8px 0 16px;
+}
+.btn-calificacion{
+  background: var(--papel-alto, #f3e6c8);
+  border: 2px solid #c9a86a;
+  border-radius: 999px;
+  padding:8px 14px;
+  font-size:0.9rem;
+  font-weight:600;
+  cursor:pointer;
+  transition: background .15s ease, transform .12s ease;
+}
+.btn-calificacion:hover{ transform: translateY(-1px); }
+.btn-calificacion.activo{
+  background: #C1121F;
+  border-color:#C1121F;
+  color:#fff;
+}
+
+.btn-eliminar-receta{
+  display:block;
+  width:100%;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  background: transparent;
+  border: 2px solid #B23A2E;
+  color: #B23A2E;
+  border-radius: var(--radio);
+  padding:10px;
+  font-weight:700;
+  cursor:pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.btn-eliminar-receta:hover{ background:#B23A2E; color:#fff; }
+
 .layout{
   max-width:1080px;
   margin: 20px auto;
