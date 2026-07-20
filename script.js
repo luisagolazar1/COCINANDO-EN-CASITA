@@ -2,20 +2,20 @@
   "use strict";
 
   const CATEGORIA_INFO = {
-    "Asados y parrilla":   { icono:"🔥", color:"#B23A2E" },
-    "Empanadas":           { icono:"🥟", color:"#C08A28" },
-    "Guisos y pucheros":   { icono:"🍲", color:"#4C6E3F" },
-    "Pastas":              { icono:"🍝", color:"#1F5C8A" },
-    "Milanesas":           { icono:"🍖", color:"#B23A2E" },
-    "Sandwiches":          { icono:"🥪", color:"#C08A28" },
-    "Postres y dulces":    { icono:"🍮", color:"#8E4A8C" },
-    "Panificados":         { icono:"🍞", color:"#4C6E3F" },
-    "Salsas y aderezos":   { icono:"🥄", color:"#1F5C8A" },
-    "Bebidas":             { icono:"🧉", color:"#3E8E7E" },
-    "Comida saludable":       { icono:"🥗", color:"#3E8E5E" },
-    "Comida saludable viral": { icono:"🌱", color:"#2E9E6E" },
-    "Comida internacional":   { icono:"🌍", color:"#8A5A2E" },
-    "Freidora de aire":       { icono:"🍟", color:"#C97A2E" }
+    "Asados y parrilla":   { icono:"🔥", color:"#B23A2E", thumb:"assets/thumbs/thumb-parrilla.png" },
+    "Empanadas":           { icono:"🥟", color:"#C08A28", thumb:"assets/thumbs/thumb-empanadas.png" },
+    "Guisos y pucheros":   { icono:"🍲", color:"#4C6E3F", thumb:"assets/thumbs/thumb-guisos.png" },
+    "Pastas":              { icono:"🍝", color:"#1F5C8A", thumb:"assets/thumbs/thumb-pastas.png" },
+    "Milanesas":           { icono:"🍖", color:"#B23A2E", thumb:"assets/thumbs/thumb-milanesas.png" },
+    "Sandwiches":          { icono:"🥪", color:"#C08A28", thumb:"assets/thumbs/thumb-sandwiches.png" },
+    "Postres y dulces":    { icono:"🍮", color:"#8E4A8C", thumb:"assets/thumbs/thumb-postres.png" },
+    "Panificados":         { icono:"🍞", color:"#4C6E3F", thumb:"assets/thumbs/thumb-panificados.png" },
+    "Salsas y aderezos":   { icono:"🥄", color:"#1F5C8A", thumb:"assets/thumbs/thumb-salsas.png" },
+    "Bebidas":             { icono:"🧉", color:"#3E8E7E", thumb:"assets/thumbs/thumb-bebidas.png" },
+    "Comida saludable":       { icono:"🥗", color:"#3E8E5E", thumb:"assets/thumbs/thumb-saludable.png" },
+    "Comida saludable viral": { icono:"🌱", color:"#2E9E6E", thumb:"assets/thumbs/thumb-saludable_viral.png" },
+    "Comida internacional":   { icono:"🌍", color:"#8A5A2E", thumb:"assets/thumbs/thumb-internacional.png" },
+    "Freidora de aire":       { icono:"🍟", color:"#C97A2E", thumb:"assets/thumbs/thumb-freidora.png" }
   };
 
   const TIEMPOS = [
@@ -236,7 +236,7 @@
     cabecera.className = "tarjeta-cabecera";
     cabecera.innerHTML = `
       <div class="tarjeta-top">
-        <div class="tarjeta-icono">${info.icono}</div>
+        <div class="tarjeta-icono">${info.thumb ? `<img src="${info.thumb}" alt="" loading="lazy">` : info.icono}</div>
         <div>
           <div class="tarjeta-cat">${r.categoria}</div>
           <h3>${r.nombre}</h3>
