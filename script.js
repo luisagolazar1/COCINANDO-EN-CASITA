@@ -14,7 +14,8 @@
     "Bebidas":             { icono:"🧉", color:"#3E8E7E" },
     "Comida saludable":       { icono:"🥗", color:"#3E8E5E" },
     "Comida saludable viral": { icono:"🌱", color:"#2E9E6E" },
-    "Comida internacional":   { icono:"🌍", color:"#8A5A2E" }
+    "Comida internacional":   { icono:"🌍", color:"#8A5A2E" },
+    "Freidora de aire":       { icono:"🍟", color:"#C97A2E" }
   };
 
   const TIEMPOS = [
