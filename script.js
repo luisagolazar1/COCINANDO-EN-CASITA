@@ -25,12 +25,39 @@
     { label:"Sin límite", max:Infinity }
   ];
 
+  const LS_ELIMINADAS = "cec_recetas_eliminadas";
+  const LS_CALIFICACIONES = "cec_recetas_calificaciones";
+
+  function cargarEliminadas(){
+    try{ return new Set(JSON.parse(localStorage.getItem(LS_ELIMINADAS)) || []); }
+    catch(e){ return new Set(); }
+  }
+  function guardarEliminadas(set){
+    localStorage.setItem(LS_ELIMINADAS, JSON.stringify([...set]));
+  }
+  function cargarCalificaciones(){
+    try{ return JSON.parse(localStorage.getItem(LS_CALIFICACIONES)) || {}; }
+    catch(e){ return {}; }
+  }
+  function guardarCalificaciones(obj){
+    localStorage.setItem(LS_CALIFICACIONES, JSON.stringify(obj));
+  }
+
+  const CALIFICACIONES_INFO = {
+    "regular":   { label:"Regular",    emoji:"🙂" },
+    "buena":     { label:"Buena",      emoji:"😋" },
+    "muy_buena": { label:"Muy buena",  emoji:"🤩" }
+  };
+
   const estado = {
     texto: "",
     categorias: new Set(),
     ingredientes: new Set(),
     dificultades: new Set(),
-    tiempoMax: Infinity
+    tiempoMax: Infinity,
+    eliminadas: cargarEliminadas(),
+    calificaciones: cargarCalificaciones(),
+    verEliminadas: false
   };
 
   const $ = sel => document.querySelector(sel);
@@ -120,6 +147,12 @@
   function recetasFiltradas(){
     const texto = normalizar(estado.texto.trim());
     let lista = RECETAS.filter(r => {
+      const estaEliminada = estado.eliminadas.has(r.id);
+      if(estado.verEliminadas){
+        if(!estaEliminada) return false;
+      } else {
+        if(estaEliminada) return false;
+      }
       if(texto && !normalizar(r.nombre).includes(texto)) return false;
       if(estado.categorias.size && !estado.categorias.has(r.categoria)) return false;
       if(estado.dificultades.size && !estado.dificultades.has(r.dificultad)) return false;
@@ -146,8 +179,9 @@
     const sinResultados = $("#sin-resultados");
     grid.innerHTML = "";
 
-    $("#contador-resultados").textContent =
-      `${lista.length} receta${lista.length===1?"":"s"} encontrada${lista.length===1?"":"s"}`;
+    $("#contador-resultados").textContent = estado.verEliminadas
+      ? `${lista.length} receta${lista.length===1?"":"s"} en la papelera`
+      : `${lista.length} receta${lista.length===1?"":"s"} encontrada${lista.length===1?"":"s"}`;
 
     renderChipsActivos();
 
@@ -193,6 +227,10 @@
       matchHTML = `<div class="tarjeta-match">✓ coincide con ${r._match} de ${estado.ingredientes.size} ingrediente${estado.ingredientes.size===1?"":"s"}</div>`;
     }
 
+    const cal = estado.calificaciones[r.id];
+    const calInfo = cal ? CALIFICACIONES_INFO[cal] : null;
+    const calHTML = calInfo ? `<div class="tarjeta-calificacion">${calInfo.emoji} ${calInfo.label}</div>` : "";
+
     const cabecera = document.createElement("button");
     cabecera.type = "button";
     cabecera.className = "tarjeta-cabecera";
@@ -205,6 +243,7 @@
         </div>
       </div>
       ${matchHTML}
+      ${calHTML}
       <div class="tarjeta-meta">
         <span>⏱ ${r.tiempo} min</span>
         <span>👥 ${r.porciones}</span>
@@ -230,7 +269,52 @@
         <ul>${r.ingredientes.map(i => `<li>${i}</li>`).join("")}</ul>
         <h4>Preparación</h4>
         <ol>${r.pasos.map(p => `<li>${p}</li>`).join("")}</ol>
+        <h4>¿Qué te pareció?</h4>
+        <div class="calificacion-botones"></div>
       `;
+
+      const contCal = detalle.querySelector(".calificacion-botones");
+      Object.entries(CALIFICACIONES_INFO).forEach(([key, info]) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-calificacion" + (estado.calificaciones[r.id] === key ? " activo" : "");
+        btn.textContent = `${info.emoji} ${info.label}`;
+        btn.addEventListener("click", () => {
+          if(estado.calificaciones[r.id] === key){
+            delete estado.calificaciones[r.id];
+          } else {
+            estado.calificaciones[r.id] = key;
+          }
+          guardarCalificaciones(estado.calificaciones);
+          render();
+        });
+        contCal.appendChild(btn);
+      });
+
+      const btnAccion = document.createElement("button");
+      btnAccion.type = "button";
+      btnAccion.className = "btn-eliminar-receta";
+      if(estado.eliminadas.has(r.id)){
+        btnAccion.textContent = "↩ Restaurar receta";
+        btnAccion.addEventListener("click", () => {
+          estado.eliminadas.delete(r.id);
+          guardarEliminadas(estado.eliminadas);
+          recetaAbiertaId = null;
+          render();
+        });
+      } else {
+        btnAccion.textContent = "🗑 Quitar del recetario";
+        btnAccion.addEventListener("click", () => {
+          if(confirm(`¿Quitar "${r.nombre}" del recetario? Vas a poder restaurarla desde la papelera.`)){
+            estado.eliminadas.add(r.id);
+            guardarEliminadas(estado.eliminadas);
+            recetaAbiertaId = null;
+            render();
+          }
+        });
+      }
+      detalle.appendChild(btnAccion);
+
       const btnCerrar = document.createElement("button");
       btnCerrar.type = "button";
       btnCerrar.className = "btn-cerrar-detalle";
@@ -282,6 +366,17 @@
     $("#btn-filtros-mobile").addEventListener("click", () => {
       $("#panel-filtros").classList.toggle("abierto");
     });
+
+    const btnPapelera = $("#btn-papelera");
+    if(btnPapelera){
+      btnPapelera.addEventListener("click", () => {
+        estado.verEliminadas = !estado.verEliminadas;
+        recetaAbiertaId = null;
+        btnPapelera.classList.toggle("activo", estado.verEliminadas);
+        btnPapelera.textContent = estado.verEliminadas ? "📖 Volver al recetario" : "🗑 Papelera";
+        render();
+      });
+    }
 
     render();
   }
